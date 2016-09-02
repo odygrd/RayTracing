@@ -9,44 +9,28 @@
 #ifndef RAYTRACING_POINT_H
 #define RAYTRACING_POINT_H
 
-#include "ILight.h"
+#include "Light.h"
 // point light definition
-class PointLight: public ILight{
+class PointLight : public Light
+{
 public:
 
     // constructor
-    PointLight(){
-        intensity.Set(0, 0, 0);
-        position.Set(0, 0, 0);
-    }
-
-    // get color of point light
-    Color illuminate(Point p){
-        return intensity;
-    }
+    PointLight(const Color& intensity, const Point& position)
+        : Light ( intensity, Point { 0, 0, 0} ),
+          position_ (position)
+    {}
 
     // get direction of point light (calculated)
-    Point direction(Point p){
-        return (p - position).GetNormalized();
-    }
 
-    // set color of point light
-    void setIntensity(Color c){
-        intensity = c;
-    }
-
-    // set the location of the point light
-    void setPosition(Point pos){
-        position = pos;
+    const Point& Direction(const Point& point) const override
+    {
+        direction_ = (point - position_).GetNormalized();
+        return direction_;
     }
 
 private:
-
-    // intensity (or color) of light
-    Color intensity;
-
-    // location of light
-    Point position;
+    Point position_; ///< location of light
 };
 
 

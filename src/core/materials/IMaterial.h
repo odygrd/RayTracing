@@ -12,7 +12,7 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
-#include "../lights/ILight.h"
+#include "../lights/Light.h"
 
 class Ray;
 class HitInfo;

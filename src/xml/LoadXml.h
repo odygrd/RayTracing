@@ -11,7 +11,7 @@
 
 #include "../cameras/Camera.h"
 #include "../core/SceneNode.h"
-#include "../core/lights/ILight.h"
+#include "../core/lights/Light.h"
 #include "../core/meshes/Sphere.h"
 #include <vector>
 

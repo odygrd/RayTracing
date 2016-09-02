@@ -431,41 +431,46 @@ void ParsedXML::LoadLight(XMLElement* lightXMLElement)
         // ambient light type
         if(strcmp(type, "ambient") == 0)
         {
-            auto ambientLight = std::make_unique<AmbientLight>();
-
             // print out light type
-            if (printXml_ == Print::PRINT) {
+            if (printXml_ == Print::PRINT)
+            {
                 printf(" - Ambient\n");
             }
-            // check children for light properties
-            for(XMLElement *child = lightXMLElement->FirstChildElement(); child != NULL; child = child->NextSiblingElement()){
 
+            Color intensity { 1, 1, 1 };
+            // check children for light properties
+            for(XMLElement *child = lightXMLElement->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
+            {
                 // load intensity (color) of light (for all lights)
                 if(strcmp(child->Value(), "intensity") == 0 )
                 {
-                    Color c(1, 1, 1);
-                    ReadColor(child, c);
-                    ambientLight->setIntensity(c);
+                    ReadColor(child, intensity);
 
                     // print out light intensity color
-                    if (printXml_ == Print::PRINT) {
-                        printf("  intensity %f %f %f\n", c.r, c.g, c.b);
+                    if (printXml_ == Print::PRINT)
+                    {
+                        printf("  intensity %f %f %f\n",
+                               intensity.r,
+                               intensity.g,
+                               intensity.b);
                     }
                 }
             }
-            lightsMap[name] = std::move(ambientLight);
+
+            lightsMap[name] = std::make_unique<AmbientLight>(intensity);
+
             // direct light type
         }
         else if(strcmp(type, "direct") == 0)
         {
-            auto directionalLight = std::make_unique<DirectLight>();
-
             // print out light type
             if (printXml_ == Print::PRINT)
             {
                 printf(" - Direct\n");
             }
 
+            Color intensity { 1, 1, 1 };
+            Point direction { 1, 1, 1 };
             // check children for light properties
             for(XMLElement *child = lightXMLElement->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
             {
@@ -473,67 +478,75 @@ void ParsedXML::LoadLight(XMLElement* lightXMLElement)
                 if(strcmp(child->Value(), "intensity") == 0)
                 {
                     Color c(1, 1, 1);
-                    ReadColor(child, c);
-                    directionalLight->setIntensity(c);
+                    ReadColor(child, intensity);
 
                     // print out light intensity color
-                    if (printXml_ == Print::PRINT) {
-                        printf("  intensity %f %f %f\n", c.r, c.g, c.b);
+                    if (printXml_ == Print::PRINT)
+                    {
+                        printf("  intensity %f %f %f\n", intensity.r, intensity.g, intensity.b);
                     }
 
                     // load direction of light
-                }else if(strcmp(child->Value(), "direction") == 0){
-                    Point v(1, 1, 1);
-                    ReadVector(child, v);
-                    directionalLight->setDirection(v);
+                }
+                else if(strcmp(child->Value(), "direction") == 0)
+                {
+                    ReadVector(child, direction);
 
                     // print out light direction
-                    if (printXml_ == Print::PRINT) {
-                        printf("  direction %f %f %f\n", v.x, v.y, v.z);
+                    if (printXml_ == Print::PRINT)
+                    {
+                        printf("  direction %f %f %f\n", direction.x, direction.y, direction.z);
                     }
                 }
             }
-            lightsMap[name] = std::move(directionalLight);
+            lightsMap[name] = std::make_unique<DirectionalLight>(intensity, direction);
             // point light type
-        }else if(strcmp(type, "point") == 0)
+        }
+        else if(strcmp(type, "point") == 0)
         {
-            auto pointLight = std::make_unique<PointLight>();
-
             // print out light type
             if (printXml_ == Print::PRINT) {
                 printf(" - Point\n");
             }
+
+            Color intensity { 1, 1, 1 };
+            Point position { 0, 0, 0 };
+
             // check children for light properties
             for(XMLElement *child = lightXMLElement->FirstChildElement(); child != NULL; child = child->NextSiblingElement()){
 
                 // load intensity (color) of light (for all lights)
-                if(strcmp(child->Value(), "intensity") == 0){
-                    Color c(1, 1, 1);
-                    ReadColor(child, c);
-                    pointLight->setIntensity(c);
+                if(strcmp(child->Value(), "intensity") == 0)
+                {
+                    ReadColor(child, intensity);
 
                     // print out light intensity color
-                    if (printXml_ == Print::PRINT) {
-                        printf("  intensity %f %f %f\n", c.r, c.g, c.b);
+                    if (printXml_ == Print::PRINT)
+                    {
+                        printf("  intensity %f %f %f\n", intensity.r, intensity.g, intensity.b);
                     }
 
                     // load position of light
-                }else if(strcmp(child->Value(), "position") == 0){
-                    Point v(0, 0, 0);
-                    ReadVector(child, v);
-                    pointLight->setPosition(v);
+                }
+                else if(strcmp(child->Value(), "position") == 0)
+                {
+                    ReadVector(child, position);
 
                     // print out light intensity color
-                    if (printXml_ == Print::PRINT) {
-                        printf("  position %f %f %f\n", v.x, v.y, v.z);
+                    if (printXml_ == Print::PRINT)
+                    {
+                        printf("  position %f %f %f\n", position.x, position.y, position.z);
                     }
                 }
             }
-            lightsMap[name] = std::move(pointLight);
+            lightsMap[name] = std::make_unique<PointLight>(intensity, position);
             // unknown light type
-        }else{
+        }
+        else
+        {
 
-            if (printXml_ == Print::PRINT) {
+            if (printXml_ == Print::PRINT)
+            {
                 printf(" - UNKNOWN LIGHT\n");
             }
         }

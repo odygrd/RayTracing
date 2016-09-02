@@ -40,19 +40,19 @@ public:
         for(auto& elem : lights){
 
             // grab light
-            ILight *light = elem.second.get();
+            Light *light = elem.second.get();
 
             // ambient light check
-            if(light->isAmbient()){
+            if(light->IsAmbient()){
 
                 // add ambient lighting term
-                c += diffuse * light->illuminate(h.point);
+                c += diffuse * light->Illuminate(h.point);
 
                 // otherwise, add diffuse and specular components from light
             }else{
 
                 // grab vector to light
-                Point l = -light->direction(h.point);
+                Point l = -light->Direction(h.point);
                 l.Normalize();
 
                 // grab vector to camera
@@ -75,7 +75,7 @@ public:
 
                 // add specular and diffuse lighting terms (only if positive)
                 if(geom > 0)
-                    c += light->illuminate(h.point) * (geom * diffuse + s * specular);
+                    c += light->Illuminate(h.point) * (geom * diffuse + s * specular);
             }
         }
 
