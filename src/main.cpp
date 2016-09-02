@@ -11,12 +11,17 @@
 
 using namespace std;
 
-bool objectIntersection(const Ray& inRay, HitInfo& outHitInfo, const SceneNode& sceneNode);
+bool objectIntersection(Ray ray, HitInfo& outHitInfo, const SceneNode& sceneNode);
 void rayTracing(int pixel, const ParsedXML& parsedXML, const Render& render);
 
 // ray tracer
 int main()
 {
+    // Latency tracking
+    auto begin = std::chrono::system_clock::now();
+
+    // *** Program start ***
+
     ParsedXML parsedXML { xml, ParsedXML::PRINT };
     Render render;
     render.init(parsedXML.camera.imageWidth, parsedXML.camera.imageHeight);
@@ -41,6 +46,14 @@ int main()
         render.computeZBuffer();
         render.saveZBuffer(zOutput);
     }
+
+    // *** Program End ***
+
+    // App time elapsed
+    auto end= std::chrono::system_clock::now();
+    std::cout << std:: endl << "Time elapsed: "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()
+              << " ms" << std::endl;
 }
 
 // ray tracing loop (for an individual pixel)
@@ -78,29 +91,33 @@ void rayTracing(int pixel, const ParsedXML& parsedXML, const Render& render)
             render.getZBufferArray()[pixel] = hitInfo.zDistance;
         }
 
-        Color24 color;
         // shade pixel if it has material
-
         if (hit)
         {
             // Node exists and has a material assigned
             if (hitInfo.node && hitInfo.node->material_)
             {
-                color = Color24(hitInfo.node->material_->shade(ray, hitInfo, parsedXML.lightsMap));
+                // FIXME breaking constness
+                // color the pixel image
+                render.getRenderImageArray()[pixel] =
+                    Color24(hitInfo.node->material_->shade(ray,
+                                                           hitInfo,
+                                                           parsedXML.lightsMap));
             }
             else
             {
-                // if we hit nothing just color it white
-                color.Set(237, 237, 237);
+                // If there is no material or node color it white
+                // unlikely to happen
+                static constexpr Color24 white { 237, 237, 237 };
+                render.getRenderImageArray()[pixel] = white;
             }
         }
         else
         {
-            color.Set(0, 0, 0);
+            // if we hit nothing just color it black ( background color )
+            static constexpr Color24 black { 0, 0, 0 };
+            render.getRenderImageArray()[pixel] = black;
         }
-
-        // color the pixel image
-        render.getRenderImageArray()[pixel] = color;  // FIXME breaking constness
 
         // re-assign next pixel (naive, but works)
         pixel += numThreads;
@@ -108,27 +125,25 @@ void rayTracing(int pixel, const ParsedXML& parsedXML, const Render& render)
 }
 
 // recursive object intersection through all scene objects for some ray
-bool objectIntersection(const Ray& inRay, HitInfo& outHitInfo, const SceneNode& sceneNode)
+bool objectIntersection(Ray ray, HitInfo& outHitInfo, const SceneNode& sceneNode)
 {
     // transform ray into model space (or local space)
-    Ray ray { sceneNode.toModelSpace(inRay) };
+    ray.ToModelSpace(sceneNode);
 
-    // make hit info for node object (if exists)
-    HitInfo tempHitInfo;
     // if object gets hit and hit first
-    bool hit;
+    bool hit { false };
 
-    if(sceneNode.mesh_)
+    if (sceneNode.mesh_)
     {
+        // make hit info for node object (if exists)
+        HitInfo tempHitInfo;
         tempHitInfo.node = &sceneNode;
+
         // check if object is hit
         hit = sceneNode.mesh_->intersectRay(ray, tempHitInfo);
-    }
 
-    if(hit)
-    {
         // check if hit was closer than previous hits and update the output hitInfo
-        if(tempHitInfo.zDistance < outHitInfo.zDistance)
+        if (tempHitInfo.zDistance < outHitInfo.zDistance)
         {
             outHitInfo = tempHitInfo;
         }
@@ -149,16 +164,16 @@ bool objectIntersection(const Ray& inRay, HitInfo& outHitInfo, const SceneNode& 
         bool childHit { objectIntersection(ray, outHitInfo, child) };
 
         // if child is hit, make sure we pass that on
-        if(childHit)
+        if (childHit)
         {
             hit = true;
         }
     }
 
-    // if object (or a descendant) was hit, transform from model space (to world space)
-    if(hit)
+    // if object (or a descendant) was hit, transform from model space to world space
+    if (hit)
     {
-        sceneNode.fromModelSpace(outHitInfo);
+        outHitInfo.FromModelSpace(sceneNode);
     }
 
     // return whether there was a hit on object or its descendants

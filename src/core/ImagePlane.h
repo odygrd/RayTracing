@@ -35,7 +35,7 @@ public:
     int size_;
 
     // static definitions
-    static constexpr float divideMPI_ = M_PI / 180.0f;
+    static constexpr float divideMPI_ = static_cast<float> (M_PI / 180.0f);
     static constexpr float imageDistance_ = 1.0f;
 };
 

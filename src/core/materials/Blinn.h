@@ -38,7 +38,7 @@ public:
         c.Set(0.0, 0.0, 0.0);
 
         // add shading from each light
-        int numLights = lights.size();
+        size_t numLights = lights.size();
         for(auto& elem : lights){
 
             // grab light
@@ -73,7 +73,7 @@ public:
                 half.Normalize();
 
                 // calculate total specular factor
-                float s = pow(half % n, shininess);
+                float s = static_cast<float>(pow(half % n, shininess));
 
                 // add specular and diffuse lighting terms (only if positive)
                 if (geom > 0)

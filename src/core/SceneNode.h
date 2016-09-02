@@ -64,14 +64,12 @@ public:
         return *childrenNodes_.back();
     }
 
-    // get / set number of children
     /**
      * @return The number of children
      */
     size_t GetChildrenNum() const { return childrenNodes_.size(); }
 
     /**
-     *
      * @param index Position of child node
      * @return The child node at given position
      */
@@ -79,20 +77,6 @@ public:
     {
         return childrenNodes_[index].get();
     }
-
-    /**
-     * Transformation of ray to model (local) space
-     * @param ray
-     * @return
-     */
-     Ray toModelSpace(const Ray& ray) const;
-
-    /**
-     * Transformation of hit information from model (local) space
-     * back to world space
-     * @param hitInfo
-     */
-     void fromModelSpace(HitInfo& hitInfo) const;
 
 private:
     std::vector<std::unique_ptr<SceneNode>> childrenNodes_; ///< contains all the

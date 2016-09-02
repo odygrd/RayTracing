@@ -176,6 +176,9 @@ public:
 	///@name Constructors
 	cyColor24() {}
 	cyColor24(const cyColor &c) { r=FloatToByte(c.r); g=FloatToByte(c.g); b=FloatToByte(c.b); }
+	constexpr cyColor24(unsigned char _r, unsigned char _g, unsigned char _b )
+		: r { _r }, g { _g }, b { _b }
+	{}
 
 	///@name Conversion Methods
 	cyColor ToColor() const { return cyColor(r/255.0f,g/255.0f,b/255.0f); }

@@ -47,6 +47,6 @@ static constexpr bool zBuffer = true;
 /**
  * Number of threads
  */
-static const int numThreads = 1;
+static const int numThreads = 8;
 
 #endif //RAYTRACING_CONFIG_H

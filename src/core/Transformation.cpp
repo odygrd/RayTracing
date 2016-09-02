@@ -25,7 +25,7 @@ void Transformation::InitTransform()
 void Transformation::Rotate(const Point& axis, float degree)
 {
     Matrix m;
-    m.SetRotation(axis, degree * (float) M_PI / 180.0);
+    m.SetRotation(axis, degree * (float) (M_PI / 180.0));
     Transform(m);
 }
 

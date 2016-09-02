@@ -10,6 +10,7 @@
 #define RAYTRACING_RAY_H
 
 #include "../math/cyMath.h"
+#include "Transformation.h"
 
 class SceneNode;
 
@@ -37,7 +38,19 @@ public:
     /**
      * Normalize the ray (only the direction is necessary)
      */
-    void normalize() { dir.Normalize(); }
+    void Normalize() { dir.Normalize(); }
+
+    /**
+     * Transformation of ray to model (local) space
+     * @param ray
+     * @return
+     */
+    void ToModelSpace(const Transformation& transform)
+    {
+        auto position  = transform.TransformTo(pos);
+        dir = transform.TransformTo(pos + dir) - position;
+        pos = position;
+    }
 };
 
 // Hit Info struct definitions (set for each node)
@@ -49,6 +62,17 @@ struct HitInfo
     const SceneNode* node { nullptr }; ///< object node that ray hits
     bool front;   ///< true if object is hit on a front face
                  ///< false if back face
+
+    /**
+     * Transformation of hit information from model (local) space
+     * back to world space
+     * @param hitInfo
+     */
+    void FromModelSpace(const Transformation& transform)
+    {
+        point = transform.TransformFrom(point);
+        normal = transform.VecTransformFrom(normal).GetNormalized();
+    }
 };
 
 #endif //RAYTRACING_RAY_H
