@@ -20,10 +20,8 @@
 class Light
 {
 public:
-    Light(const Color& intensity, const Point& direction)
-        : intensity_ { intensity },
-          direction_ { direction }
-    {}
+
+    virtual ~Light() = default;
 
     /**
      * Get the color of light
@@ -48,7 +46,12 @@ public:
     virtual bool IsAmbient() const { return false; }
 
 protected:
-    Color intensity_; ///< intensity (or color) of light
+    Light(const Color& intensity, const Point& direction)
+        : intensity_ { intensity },
+          direction_ { direction.GetNormalized() }
+    {}
+
+    Color         intensity_; ///< intensity (or color) of light
     mutable Point direction_; ///< direction of light;
 };
 

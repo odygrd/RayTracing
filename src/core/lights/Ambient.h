@@ -19,15 +19,17 @@
 class AmbientLight: public Light
 {
 public:
-
     /**
      * Constructors
      */
     AmbientLight(const Color& intensity)
-        : Light(intensity, Point { 0, 0, 0})
+        : Light { intensity, Point { 0, 0, 0} }
     {}
 
-    // return true, since light is ambient
+    /**
+     * Return true, since light is ambient
+     * @return
+     */
     bool IsAmbient() const override { return true; }
 };
 

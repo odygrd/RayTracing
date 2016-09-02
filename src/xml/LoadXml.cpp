@@ -230,117 +230,116 @@ void ParsedXML::LoadMaterial(XMLElement* materialXMLElement)
         // blinn-phong material type
         if(strcmp(type, "blinn") == 0)
         {
-            auto blinnMaterial = std::make_unique<BlinnMaterial>();
-
             // print out material type
             if (printXml_ == Print::PRINT)
                 printf(" - Blinn\n");
 
-            // check children for material properties
-            for(XMLElement *child = materialXMLElement->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
-            {
-                // initialize values
-                Color c(1, 1, 1);
-                float f = 1.0;
+            // initialize values
+            Color diffuse  { 1, 1, 1 };
+            Color specular { 1, 1, 1 };
+            float shininess { 1.0 };
 
+            // check children for material properties
+            for(XMLElement *child = materialXMLElement->FirstChildElement();
+                child != nullptr;
+                child = child->NextSiblingElement())
+            {
                 // load diffuse color
-                if(strcmp(child->Value(), "diffuse") == 0)
+                if (strcmp(child->Value(), "diffuse") == 0)
                 {
-                    ReadColor(child, c);
-                    blinnMaterial->setDiffuse(c);
+                    ReadColor(child, diffuse);
 
                     // print out diffuse color
                     if (printXml_ == Print::PRINT)
                     {
-                        printf("  diffuse %f %f %f\n", c.r, c.g, c.b);
+                        printf("  diffuse %f %f %f\n", diffuse.r, diffuse.g, diffuse.b);
                     }
 
                     // load specular color
                 }
-                else if(strcmp(child->Value(), "specular") == 0)
+                else if (strcmp(child->Value(), "specular") == 0)
                 {
-                    ReadColor(child, c);
-                    blinnMaterial->setSpecular(c);
+                    ReadColor(child, specular);
 
                     //print out specular color
                     if (printXml_ == Print::PRINT)
                     {
-                        printf("  specular %f %f %f\n", c.r, c.g, c.b);
+                        printf("  specular %f %f %f\n", specular.r, specular.g, specular.b);
                     }
                     // load shininess value
                 }
-                else if(strcmp(child->Value(), "shininess") == 0)
+                else if (strcmp(child->Value(), "glossiness") == 0)
                 {
-                    ReadFloat(child, f);
-                    blinnMaterial->setShininess(f);
+                    ReadFloat(child, shininess);
 
                     // print out shininess value
                     if (printXml_ == Print::PRINT)
                     {
-                        printf("  shininess %f\n", f);
+                        printf("  shininess %f\n", shininess);
                     }
                 }
             }
-            materialsMap[name] = std::move(blinnMaterial);
-            // phong material type
+            materialsMap[name] = std::make_unique<BlinnMaterial>(diffuse,
+                                                                 specular,
+                                                                 shininess);
         }
-        else if(strcmp(type, "phong") == 0)
+        else if(strcmp(type, "phong") == 0) // phong material type
         {
-            auto phongMaterial = std::make_unique<PhongMaterial>();
-
             // print out material type
             if (printXml_ == Print::PRINT)
             {
                 printf(" - Phong\n");
             }
+
+            // initialize values
+            Color diffuse  { 1, 1, 1 };
+            Color specular { 1, 1, 1 };
+            float shininess { 1.0 };
+
             // check children for material properties
-            for(XMLElement *child = materialXMLElement->FirstChildElement(); child != NULL; child = child->NextSiblingElement()){
-
-                // initialize values
-                Color c(1, 1, 1);
-                float f = 1.0;
-
+            for (XMLElement *child = materialXMLElement->FirstChildElement();
+                 child != nullptr;
+                 child = child->NextSiblingElement())
+            {
                 // load diffuse color
-                if(strcmp(child->Value(), "diffuse") == 0)
+                if (strcmp(child->Value(), "diffuse") == 0)
                 {
-                    ReadColor(child, c);
-                    phongMaterial->setDiffuse(c);
+                    ReadColor(child, diffuse);
 
                     // print out diffuse color
                     if (printXml_ == Print::PRINT)
                     {
-                        printf("  diffuse %f %f %f\n", c.r, c.g, c.b);
+                        printf("  diffuse %f %f %f\n", diffuse.r, diffuse.g, diffuse.b);
                     }
                     // load specular color
                 }
-                else if(strcmp(child->Value(), "specular") == 0)
+                else if (strcmp(child->Value(), "specular") == 0)
                 {
-                    ReadColor(child, c);
-                    phongMaterial->setSpecular(c);
+                    ReadColor(child, specular);
 
                     //print out specular color
                     if (printXml_ == Print::PRINT)
                     {
-                        printf("  specular %f %f %f\n", c.r, c.g, c.b);
+                        printf("  specular %f %f %f\n", specular.r, specular.g, specular.b);
                     }
                     // load shininess value
                 }
-                else if(strcmp(child->Value(), "shininess") == 0)
+                else if (strcmp(child->Value(), "glossiness") == 0)
                 {
-                    ReadFloat(child, f);
-                    phongMaterial->setShininess(f);
+                    ReadFloat(child, shininess);
 
                     // print out shininess value
                     if (printXml_ == Print::PRINT)
                     {
-                        printf("  shininess %f\n", f);
+                        printf("  shininess %f\n", shininess);
                     }
                 }
             }
-            materialsMap[name] = std::move(phongMaterial);
-            // unknown material type
+            materialsMap[name] = std::make_unique<PhongMaterial>(diffuse,
+                                                                 specular,
+                                                                 shininess);
         }
-        else
+        else // unknown material type
         {
             if (printXml_ == Print::PRINT)
             {
@@ -348,7 +347,6 @@ void ParsedXML::LoadMaterial(XMLElement* materialXMLElement)
             }
         }
     }
-
 }
 
 // load in the transformation terms for each node

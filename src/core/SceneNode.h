@@ -16,7 +16,7 @@
 
 #include "Transformation.h"
 #include "Ray.h"
-#include "materials/IMaterial.h"
+#include "materials/Material.h"
 #include "meshes/IMesh.h"
 
 // Node definition (pieces of the scene which store objects)
@@ -35,7 +35,7 @@ public:
     // FIXME :: make private, read materials first, then construct the object
     std::string      name_;                  ///< node's name
     const IMesh*     mesh_ { nullptr };     ///< object reference
-    const IMaterial* material_ { nullptr }; ///< node's material
+    const Material* material_ { nullptr }; ///< node's material
 
     /**
      * Constructors

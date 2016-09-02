@@ -10,19 +10,29 @@
 #define RAYTRACING_POINT_H
 
 #include "Light.h"
-// point light definition
+
+/**
+ * Point light definitiion
+ */
 class PointLight : public Light
 {
 public:
-
-    // constructor
+    /**
+     * Constructor
+     * @param intensity
+     * @param position
+     * @return
+     */
     PointLight(const Color& intensity, const Point& position)
-        : Light ( intensity, Point { 0, 0, 0} ),
-          position_ (position)
+        : Light { intensity, Point { 0, 0, 0} },
+          position_ { position }
     {}
 
-    // get direction of point light (calculated)
-
+    /**
+     * Get the direction of the light
+     * @param point
+     * @return
+     */
     const Point& Direction(const Point& point) const override
     {
         direction_ = (point - position_).GetNormalized();

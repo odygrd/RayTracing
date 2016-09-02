@@ -100,7 +100,7 @@ void rayTracing(int pixel, const ParsedXML& parsedXML, const Render& render)
                 // FIXME breaking constness
                 // color the pixel image
                 render.getRenderImageArray()[pixel] =
-                    Color24(hitInfo.node->material_->shade(ray,
+                    Color24(hitInfo.node->material_->Shade(ray,
                                                            hitInfo,
                                                            parsedXML.lightsMap));
             }

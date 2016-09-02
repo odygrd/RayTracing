@@ -14,12 +14,14 @@
 /**
  * Directional light
  */
-class DirectionalLight: public Light {
+class DirectionalLight: public Light
+{
 public:
-
-    // constructor
+    /**
+     * Constructor
+     */
     DirectionalLight(const Color& intensity, const Point& direction)
-        : Light(intensity, direction.GetNormalized())
+        : Light { intensity, direction }
     {}
 };
 
