@@ -12,6 +12,7 @@
 #include "../math/cyMath.h"
 
 namespace tinyxml2 { class XMLElement; }
+
 /**
  * Read in a vector from an XML element
  * @param element

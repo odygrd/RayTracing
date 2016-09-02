@@ -100,5 +100,14 @@ public:
      * @param lightXMLElement
      */
     void LoadLight(tinyxml2::XMLElement* lightXMLElement);
+
+    /**
+     * Read material properties and add the material to materialsMap container
+     * @param materialName       Material's name
+     * @param materialXMLElement Handler to xml material element
+     */
+    template <typename TLight>
+    void AddMaterial_(const char* materialName,
+                      tinyxml2::XMLElement* materialXMLElement);
 };
 #endif //RAYTRACING_LOADXML_H
