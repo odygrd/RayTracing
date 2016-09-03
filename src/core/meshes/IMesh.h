@@ -13,13 +13,14 @@
 #include <vector>
 #include "../Ray.h"
 
+/**
+ * Interface for different geometric shapes
+ */
 class IMesh
 {
 public:
     virtual ~IMesh() = default;
-    virtual bool intersectRay(Ray& r, HitInfo& h, int face = HIT_FRONT) const = 0;
+    virtual bool RayIntersection(const Ray &r, HitInfo &h, int face = HIT_FRONT) const = 0;
 };
-
-using SceneMeshes = std::vector<std::unique_ptr<IMesh>>;
 
 #endif //RAYTRACING_IMESH_H

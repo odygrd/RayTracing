@@ -128,7 +128,7 @@ public:
 
 	///@name Constructors
 	cyPoint3f() { }
-	cyPoint3f( float _x, float _y, float _z ) { x=_x; y=_y; z=_z; }
+	constexpr cyPoint3f( float _x, float _y, float _z ) : x(_x), y(_y), z(_z) {}
 	cyPoint3f( const float *pt ) { x=pt[0]; y=pt[1]; z=pt[2]; }
 	cyPoint3f( const cyPoint3f &pt ) { x=pt.x; y=pt.y; z=pt.z; }
 	cyPoint3f( const cyPoint2f &pt ) { x=pt.x; y=pt.y; z=0.0f; }

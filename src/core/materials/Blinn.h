@@ -38,7 +38,7 @@ public:
     {}
 
     /**
-     * shading function (blinn)
+     * Shading function (blinn)
      */
     Color Shade(const Ray& ray,
                 const HitInfo& hitInfo,

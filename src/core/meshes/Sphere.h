@@ -11,50 +11,35 @@
 
 #include "IMesh.h"
 
-// Sphere definition
+/**
+ * Sphere shape definition.
+ * This is always a fixed (0,0,0) radius 1 sphere.
+ * All the transformation for this object are stored under the SceneNode class
+ * @see SceneNode Transformation
+ */
 class Sphere : public IMesh
 {
 public:
 
-    // constructor
-    Sphere(){
-        center.Set(0, 0, 0);
-        radius = 1.0;
-    }
+    /**
+     * Constructors
+     */
+    constexpr Sphere() = default;
 
-    // intsersect a ray against the unit sphere
-    // ray must be transformed into model space, first
-    bool intersectRay(Ray &r, HitInfo &h, int face=HIT_FRONT) const {
-
-        // pre-compute values for quadratic solution
-        Point pos = r.pos - center;
-        float A = r.dir % r.dir;
-        float B = 2.0 * pos % r.dir;
-        float C = pos % pos - radius * radius;
-        float det = (B * B) - (4 * A * C);
-
-        // if the ray intersects, compute the z-buffer value
-        if(det >= 0){
-            float z = (-B - sqrt(det)) / (2.0 * A);
-            h.zDistance = z;
-
-            // also get the surface intersection and normal
-            h.point = r.pos + z * r.dir;
-            h.normal = h.point.GetNormalized();
-
-            // return true, ray is hit
-            return true;
-
-            // otherwise, return false
-        }else
-            return false;
-    }
+    /**
+     * Intersect a ray against the unit sphere.
+     * @param ray      The ray, transformed into model (local) space
+     * @param hitInfo  Populate object hit information
+     * @param face
+     * @return         true if the object was hit, false otherwise
+     */
+    bool RayIntersection(const Ray& ray,
+                         HitInfo& hitInfo,
+                         int face = HIT_FRONT) const override;
 
 private:
-
-    // sphere center and its radius
-    Point center;
-    float radius;
+    Point center_ { 0, 0, 0 };
+    float radius_ { 1.0 };
 };
 
 

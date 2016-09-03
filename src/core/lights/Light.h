@@ -34,7 +34,7 @@ public:
      * @param p
      * @return
      */
-    virtual const Point& Direction(const Point& point) const { return direction_; }
+    virtual const Point& GetDirection(const Point &point) const { return direction_; }
 
     // return true, since light is ambient
     /**

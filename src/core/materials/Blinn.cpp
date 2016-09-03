@@ -26,9 +26,8 @@ Color BlinnMaterial::Shade(const Ray& ray,
             //add diffuse and specular components from light
 
             // grab vector to light
-            // Direction is already normalised.
-            const Point lightDir { -light.Direction(hitInfo.point) };
-            //l.Normalize();
+            // direction is already normalised.
+            const Point lightDir { -light.GetDirection(hitInfo.point) };
 
             // grab vector to camera
             const Point rayDir { -ray.dir.GetNormalized() };

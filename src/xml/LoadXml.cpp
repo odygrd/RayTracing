@@ -22,7 +22,7 @@ using tinyxml2::XMLDocument;
 using tinyxml2::XMLElement;
 using tinyxml2::XML_SUCCESS;
 
-const Sphere ParsedXML::aSphere;
+const Sphere ParsedXML::aSphere {};
 
 void ParsedXML::LoadXml(const char* file)
 {

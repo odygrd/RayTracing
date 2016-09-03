@@ -33,7 +33,7 @@ public:
      * @param point
      * @return
      */
-    const Point& Direction(const Point& point) const override
+    const Point& GetDirection(const Point &point) const override
     {
         direction_ = (point - position_).GetNormalized();
         return direction_;

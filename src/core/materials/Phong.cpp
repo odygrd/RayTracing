@@ -26,8 +26,8 @@ Color PhongMaterial::Shade(const Ray& ray,
             //add diffuse and specular components from light
 
             // grab vector to light
-            // Direction is already normalised.
-            const Point lightDir { -light.Direction(hitInfo.point) };
+            // GetDirection is already normalised.
+            const Point lightDir { -light.GetDirection(hitInfo.point) };
             //l.Normalize();
 
             // grab vector to camera

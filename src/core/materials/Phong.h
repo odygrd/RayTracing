@@ -36,7 +36,7 @@ public:
     {}
 
     /**
-     * shading function (blinn)
+     * Shading function (phong)
      */
     Color Shade(const Ray& ray,
                 const HitInfo& hitInfo,

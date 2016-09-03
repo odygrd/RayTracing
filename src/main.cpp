@@ -43,7 +43,6 @@ int main(int argc, char* argv[])
         t[i].join();
     }
 
-    std::cout << "Writing Image File..." << std::endl;
     // output ray-traced image & z-buffer (if set)
     const std::string fileName { argv[1] };
     const auto first = fileName.find("/") + 1;
@@ -52,9 +51,12 @@ int main(int argc, char* argv[])
     const auto imageName = outputPath + output + ".ppm";
     const auto imageNameZ = outputPath + output + "z.ppm";
 
+    std::cout << "Writing Image File " << imageName.c_str() << " ..." << std::endl;
+
     render.save(imageName.c_str());
     if(zBuffer)
     {
+        std::cout << "Writing Image File " << imageNameZ.c_str() << " ..." << std::endl;
         render.computeZBuffer();
         render.saveZBuffer(imageNameZ.c_str());
     }
@@ -77,7 +79,7 @@ void rayTracing(int pixel, const ParsedXML& parsedXML, const ImagePlane& imgPlan
         int pX { pixel % render.getWidth() };
         int pY { pixel / render.getWidth() };
 
-        // transform ray into world space
+        // Create a ray in the world space
         Point rayDirection { imgPlane.getFirstPixel() +
                              (imgPlane.getDXV() * pX) +
                              (imgPlane.getDYV() * pY) };
@@ -149,7 +151,7 @@ bool objectIntersection(Ray ray, HitInfo& outHitInfo, const SceneNode& sceneNode
         tempHitInfo.node = &sceneNode;
 
         // check if object is hit
-        hit = sceneNode.mesh_->intersectRay(ray, tempHitInfo);
+        hit = sceneNode.mesh_->RayIntersection(ray, tempHitInfo);
 
         // check if hit was closer than previous hits and update the output hitInfo
         if (tempHitInfo.zDistance < outHitInfo.zDistance)
