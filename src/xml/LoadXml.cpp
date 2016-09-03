@@ -259,8 +259,7 @@ void ParsedXML::LoadMaterial(XMLElement* materialXMLElement)
 // load in the transformation terms for each node
 void ParsedXML::LoadTransform(SceneNode* nodeTransformation, XMLElement* objectXMLElement, int level)
 {
-
-    // recursively apply transformations to child nodes that have been set already
+    // recursively apply transformations to child nodes that have been already set
     for(XMLElement* child = objectXMLElement->FirstChildElement(); child != NULL; child = child->NextSiblingElement())
     {
         // check if child is a scaling term

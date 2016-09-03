@@ -148,19 +148,20 @@ public:
     }
 
     // save the rendered image to a file
-    bool save(const char *file){
-        return outputImage(file, 3);
+    bool save(const char* file){
+        return outputImage(file , 3);
     }
 
     // save the rendered z-buffer image to a file
-    bool saveZBuffer(const char *file){
+    bool saveZBuffer(const char* file){
         return outputImage(file, 1);
     }
 
 private:
 
     // write out an image file
-    bool outputImage(const char *file, int components){
+    bool outputImage(const char* file, int components)
+    {
         std::ofstream f;
         f.open(file);
 

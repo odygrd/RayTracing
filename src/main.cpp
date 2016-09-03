@@ -15,14 +15,14 @@ bool objectIntersection(Ray ray, HitInfo& outHitInfo, const SceneNode& sceneNode
 void rayTracing(int pixel, const ParsedXML& parsedXML, const Render& render);
 
 // ray tracer
-int main()
+int main(int argc, char* argv[])
 {
     // Latency tracking
     auto begin = std::chrono::system_clock::now();
 
     // *** Program start ***
 
-    ParsedXML parsedXML { xml, ParsedXML::PRINT };
+    ParsedXML parsedXML { argv[1], ParsedXML::PRINT };
     Render render;
     render.init(parsedXML.camera.imageWidth, parsedXML.camera.imageHeight);
 
@@ -39,12 +39,20 @@ int main()
         t[i].join();
     }
 
+
     // output ray-traced image & z-buffer (if set)
-    render.save(output);
+    const std::string fileName { argv[1] };
+    const auto first = fileName.find("/") + 1;
+    const auto last = fileName.find(".");
+    const auto output = fileName.substr (first, last - first);
+    const auto imageName = outputPath + output + ".ppm";
+    const auto imageNameZ = outputPath + output + "z.ppm";
+
+    render.save(imageName.c_str());
     if(zBuffer)
     {
         render.computeZBuffer();
-        render.saveZBuffer(zOutput);
+        render.saveZBuffer(imageNameZ.c_str());
     }
 
     // *** Program End ***
