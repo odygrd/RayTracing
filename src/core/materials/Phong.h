@@ -43,6 +43,4 @@ public:
                 const LightsMap& sceneLights) const override;
 };
 
-
-
 #endif //RAYTRACING_PHONG_H

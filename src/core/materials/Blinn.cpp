@@ -43,8 +43,8 @@ Color BlinnMaterial::Shade(const Ray& ray,
             const Point half { (rayDir + lightDir).GetNormalized() };
 
             // calculate total specular factor
-            float specularFactor =
-                static_cast<float>(pow(half % hitNormal, shininess_));
+            float specularFactor {
+                static_cast<float>(pow(half % hitNormal, shininess_)) };
 
             // add specular and diffuse lighting terms (only if positive)
             if (geom > 0)

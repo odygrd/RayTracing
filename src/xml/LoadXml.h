@@ -44,9 +44,20 @@ public:
      */
     static const Sphere aSphere;
 
-    ParsedXML(const char* file, Print printXML = Print::DONT_PRINT)
+    ParsedXML(const char* file, Print printXML)
         : printXml_(printXML)
     {
+        LoadXml(file);
+    }
+
+    explicit ParsedXML(const char* file)
+    {
+        #ifdef NDEBUG
+        printXml_ = Print::DONT_PRINT;
+        #else
+        printXml_ = Print::PRINT;
+        #endif
+
         LoadXml(file);
     }
 

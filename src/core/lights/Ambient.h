@@ -11,7 +11,6 @@
 
 #include "Light.h"
 
-// ambient light definition
 /**
  * Ambient light definition.
  * Ambient light has no direction.
@@ -32,6 +31,5 @@ public:
      */
     bool IsAmbient() const override { return true; }
 };
-
 
 #endif //RAYTRACING_AMBIENT_H

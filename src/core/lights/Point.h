@@ -43,5 +43,4 @@ private:
     Point position_; ///< location of light
 };
 
-
 #endif //RAYTRACING_POINT_H

@@ -20,7 +20,6 @@
 class Light
 {
 public:
-
     virtual ~Light() = default;
 
     /**
@@ -30,7 +29,6 @@ public:
      */
     virtual const Color& Illuminate(const Point& point) const { return intensity_; }
 
-    //
     /**
      * Get the direction of light (non-sensical)
      * @param p

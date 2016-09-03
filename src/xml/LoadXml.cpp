@@ -9,9 +9,6 @@
 #include "LoadXml.h"
 
 #include <iostream>
-#include <string.h>
-#include <memory>
-#include <exception>
 
 #include "ParseUtils.h"
 #include "../../third-party/tinyxml2/tinyxml2.h"
@@ -278,7 +275,6 @@ void ParsedXML::LoadTransform(SceneNode* nodeTransformation, XMLElement* objectX
                 PrintIndent(level + 1);
                 printf("scale %f %f %f\n", s.x, s.y, s.z);
             }
-            std::cout << " Scaling Node " << nodeTransformation->name_ << nodeTransformation->GetTransform().data << std::endl;
             // check if child is a rotation term
         }
         else if(strcmp(child->Value(), "rotate") == 0)
@@ -381,7 +377,6 @@ void ParsedXML::LoadLight(XMLElement* lightXMLElement)
                 // load intensity (color) of light (for all lights)
                 if(strcmp(child->Value(), "intensity") == 0)
                 {
-                    Color c(1, 1, 1);
                     ReadColor(child, intensity);
 
                     // print out light intensity color

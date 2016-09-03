@@ -25,6 +25,4 @@ public:
     {}
 };
 
-
-
 #endif //RAYTRACING_DIRECTIONAL_H

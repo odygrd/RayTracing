@@ -12,7 +12,7 @@
 using namespace std;
 
 bool objectIntersection(Ray ray, HitInfo& outHitInfo, const SceneNode& sceneNode);
-void rayTracing(int pixel, const ParsedXML& parsedXML, const Render& render);
+void rayTracing(int pixel, const ParsedXML& parsedXML, const ImagePlane& imgPlane, const Render& render);
 
 // ray tracer
 int main(int argc, char* argv[])
@@ -20,17 +20,21 @@ int main(int argc, char* argv[])
     // Latency tracking
     auto begin = std::chrono::system_clock::now();
 
-    // *** Program start ***
+    std::cout << "Parsing File" << argv[1] << std::endl;
+    ParsedXML parsedXML { argv[1] };
 
-    ParsedXML parsedXML { argv[1], ParsedXML::PRINT };
     Render render;
     render.init(parsedXML.camera.imageWidth, parsedXML.camera.imageHeight);
 
+    // set variables for generating camera rays
+    ImagePlane imgPlane { parsedXML.camera };
+
+    std::cout << "Rendering..." << std::endl;
     // start ray tracing loop (in parallel with threads)
     thread t[numThreads];
     for(int i = 0; i < numThreads; i++)
     {
-        t[i] = thread(rayTracing, i, std::ref(parsedXML), std::ref(render));
+        t[i] = thread(rayTracing, i, std::ref(parsedXML), std::ref(imgPlane), std::ref(render));
     }
 
     // when finished, join all threads back to main
@@ -39,7 +43,7 @@ int main(int argc, char* argv[])
         t[i].join();
     }
 
-
+    std::cout << "Writing Image File..." << std::endl;
     // output ray-traced image & z-buffer (if set)
     const std::string fileName { argv[1] };
     const auto first = fileName.find("/") + 1;
@@ -55,7 +59,7 @@ int main(int argc, char* argv[])
         render.saveZBuffer(imageNameZ.c_str());
     }
 
-    // *** Program End ***
+    std::cout << "Done" << std::endl;
 
     // App time elapsed
     auto end= std::chrono::system_clock::now();
@@ -65,11 +69,8 @@ int main(int argc, char* argv[])
 }
 
 // ray tracing loop (for an individual pixel)
-void rayTracing(int pixel, const ParsedXML& parsedXML, const Render& render)
+void rayTracing(int pixel, const ParsedXML& parsedXML, const ImagePlane& imgPlane, const Render& render)
 {
-    // set variables for generating camera rays
-    ImagePlane imgPlane { parsedXML.camera };
-
     do
     {
         // establish pixel location
